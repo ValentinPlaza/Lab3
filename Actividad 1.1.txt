@@ -1,0 +1,25 @@
+create database Facultad
+GO
+use Facultad
+GO
+create table Carreras(
+	ID varchar(4) not null primary key,
+	Nombre varchar(30) not null,
+	Fecha_Creacion datetime not null check(Fecha_Creacion <= GETDATE()),
+	Mail varchar(50) not null,
+	Nivel varchar(12) null check(Nivel = 'Diplomatura' OR Nivel='Pregrado' OR Nivel = 'Grado' OR Nivel='Posgrado')
+)
+GO
+create table Materias(
+	ID int not null primary key identity(1,1),
+	IDCarrera varchar(4) not null foreign key references Carreras(ID),
+	Nombre varchar(30) not null,
+	Carga_horaria int not null check (Carga_horaria > 0)
+)
+GO
+create table Alumnos(
+	Legajo bigint not null primary key identity(1000,1),
+	IDCarrera varchar(4) not null foreign key references Carreras(ID),
+	Nombre varchar(30) not null,
+	Carga_horaria int not null check(Carga_horaria > 0)
+)
