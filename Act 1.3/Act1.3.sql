@@ -10,24 +10,24 @@ CREATE TABLE TipoCliente(
 )
 GO
 
-CREATE TABLE Cliente(
-	ID int not null primary key identity(1000,1),
-	CUIT varchar(13) not null unique,
+CREATE TABLE Clientes(
+	ID int not null primary key identity(1,1),
 	RazonSocial varchar(50) not null,
 	IDTipoCliente int not null foreign key references TipoCliente(ID),
-	Mail varchar(40) null unique,
+	CUIT varchar(13) not null unique,
+	Mail varchar(40) null,
 	Telefono varchar(16) null,
 	Celular varchar(16) null
 )
 GO
 
-CREATE TABLE Proyecto(
+CREATE TABLE Proyectos(
 	ID varchar(4) not null primary key,
-	Nombre varchar(30) not null,
+	IDCliente int not null foreign key references Clientes(ID),
+	Nombre varchar(50) not null,
 	Descripcion varchar(150) null,
-	IDCliente int not null foreign key references Cliente(ID),
-	FechaInicio datetime not null,
-	FechaFin datetime null,
-	CostoEstimado decimal(12,2) not null check(CostoEstimado >= 0),
-	Estado bit not null default(1)
+	CostoEstimado int not null check(CostoEstimado >= 0),
+	FechaInicio date not null,
+	FechaFin date null,
+	Estado bit not null default(1)	
 )
