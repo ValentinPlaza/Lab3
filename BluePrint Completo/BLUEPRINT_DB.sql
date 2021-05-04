@@ -106,7 +106,7 @@ CREATE TABLE Colaboraciones(
 	ID bigint not null primary key identity(1,1),
 	IdTarea int not null foreign key references Tareas(ID),
 	IdColaborador int not null foreign key references Colaboradores(ID),
-	PrecioHora smallmoney not null check(PrecioHora > 0),
-	Tiempo smallint null check(Tiempo > 0),
+	PrecioHora money not null check(PrecioHora > 0),
+	Tiempo int null check(Tiempo > 0),
 	Estado bit not null default(1)
 )
