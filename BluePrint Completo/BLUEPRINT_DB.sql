@@ -1,7 +1,7 @@
-CREATE DATABASE Blueprint1
+CREATE DATABASE Blueprint
 GO
 
-USE Blueprint1
+USE Blueprint
 GO
 
 CREATE TABLE TiposCliente(

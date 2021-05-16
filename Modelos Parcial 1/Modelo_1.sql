@@ -1,0 +1,61 @@
+USE MODELOPARCIAL1
+GO
+
+-- 1) Apellido y nombres de los pacientes cuya cantidad de turnos de 'Protologia' sea mayor a 2.
+
+SELECT PA.Nombre, PA.Apellido FROM PACIENTES PA
+WHERE 
+(
+SELECT COUNT(E.IDESPECIALIDAD) FROM ESPECIALIDADES E
+INNER JOIN MEDICOS M ON E.IDESPECIALIDAD = M.IDESPECIALIDAD
+INNER JOIN TURNOS T ON M.IDMEDICO = T.IDMEDICO
+WHERE T.IDPACIENTE = PA.IDPACIENTE AND E.NOMBRE LIKE 'Proctologia'
+)
+> 2
+GO
+
+-- 2) Los apellidos y nombres de los médicos (sin repetir) que hayan demorado en alguno de sus turnos menos de la duración promedio de turnos.
+SELECT DISTINCT M.Nombre, M.Apellido FROM MEDICOS M
+INNER JOIN TURNOS T ON M.IDMEDICO = T.IDMEDICO
+WHERE T.DURACION < 
+(
+SELECT AVG(Turnos.DURACION) FROM TURNOS
+)
+GO
+
+-- 3) Por cada paciente, el apellido y nombre y la cantidad de turnos realizados en el primer semestre y la cantidad de turnos realizados en el segundo semestre. Indistintamente del año.
+SELECT PA.Apellido, PA.Nombre, 
+(
+SELECT COUNT(T.IDTURNO) FROM TURNOS T
+WHERE MONTH(T.FECHAHORA) BETWEEN 1 AND 6 AND T.IDPACIENTE = PA.IDPACIENTE
+) PrimerSemestre, 
+(
+SELECT COUNT(T.IDTURNO) FROM TURNOS T
+WHERE MONTH(T.FECHAHORA) BETWEEN 7 AND 12 AND T.IDPACIENTE = PA.IDPACIENTE
+) SegundoSemestre
+FROM PACIENTES PA
+GO
+
+-- 4) Los pacientes que se hayan atendido más veces en el año 2000 que en el año 2001 y a su vez más veces en el año 2001 que en año 2002.
+SELECT PA.NOMBRE FROM PACIENTES PA
+WHERE 
+(
+SELECT COUNT(T.IDTURNO) FROM TURNOS T
+WHERE YEAR(T.FECHAHORA) = 2000 AND T.IDPACIENTE = PA.IDPACIENTE
+)
+> 
+(
+SELECT COUNT(T.IDTURNO) FROM TURNOS T
+WHERE YEAR(T.FECHAHORA) = 2001 AND T.IDPACIENTE = PA.IDPACIENTE
+)
+AND 
+(
+SELECT COUNT(T.IDTURNO) FROM TURNOS T
+WHERE YEAR(T.FECHAHORA) = 2001 AND T.IDPACIENTE = PA.IDPACIENTE 
+)
+> 
+(
+SELECT COUNT(T.IDTURNO) FROM TURNOS T
+WHERE YEAR(T.FECHAHORA) = 2002 AND T.IDPACIENTE = PA.IDPACIENTE
+)
+GO
